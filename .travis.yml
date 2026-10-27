@@ -1,0 +1,22 @@
+
+language: python
+
+dist: noble
+
+python:
+  - "3.13"
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - python manage.py check
+
+script:
+  - black --check . --exclude '/(\.git|assignment_1|migrations)/'
+  - flake8 .
+  - coverage run --source=mysite,polls manage.py test
+  - coverage report
+
+after_success:
+  - coveralls

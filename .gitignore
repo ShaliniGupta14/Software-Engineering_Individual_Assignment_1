@@ -5,3 +5,15 @@ __pycache__/
 .env
 *.pem
 .elasticbeanstalk/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Coverage files
+.coverage
+.coverage.*
+htmlcov/
+
+# Local SQLite database
+db.sqlite3
