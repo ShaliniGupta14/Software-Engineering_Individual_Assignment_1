@@ -20,3 +20,18 @@ script:
 
 after_success:
   - coveralls
+
+
+deploy:
+  provider: elasticbeanstalk
+  edge: true
+  region: us-east-2
+  app: Individual_Assignment_1
+  env: IndividualAssignment1-env
+  bucket: elasticbeanstalk-us-east-2-550097745854
+  bucket_path: travis-deployments
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  on:
+    branch: main
+    repo: ShaliniGupta14/Software-Engineering_Individual_Assignment_1
