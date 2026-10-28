@@ -2,6 +2,7 @@
 set -euo pipefail
 
 export AWS_DEFAULT_REGION=us-east-2
+export AWS_PAGER=""
 
 APP="Individual_Assignment_1"
 ENV="IndividualAssignment1-env"
@@ -16,11 +17,22 @@ git archive --format=zip --output=/tmp/django-deploy.zip HEAD
 echo "Uploading source bundle..."
 aws s3 cp /tmp/django-deploy.zip "s3://${BUCKET}/${KEY}"
 
-echo "Creating application version: ${VERSION}"
-aws elasticbeanstalk create-application-version \
+echo "Checking application version..."
+EXISTING_VERSION=$(aws elasticbeanstalk describe-application-versions \
   --application-name "$APP" \
-  --version-label "$VERSION" \
-  --source-bundle S3Bucket="$BUCKET",S3Key="$KEY"
+  --version-labels "$VERSION" \
+  --query 'ApplicationVersions[0].VersionLabel' \
+  --output text)
+
+if [[ "$EXISTING_VERSION" == "$VERSION" ]]; then
+  echo "Application version already exists. Reusing it."
+else
+  echo "Creating application version..."
+  aws elasticbeanstalk create-application-version \
+    --application-name "$APP" \
+    --version-label "$VERSION" \
+    --source-bundle S3Bucket="$BUCKET",S3Key="$KEY"
+fi
 
 echo "Deploying version: ${VERSION}"
 aws elasticbeanstalk update-environment \
