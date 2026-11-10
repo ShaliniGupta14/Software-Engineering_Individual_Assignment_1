@@ -51,5 +51,3 @@ def vote(request, question_id):
                 args=(question.id,),
             )
         )
-import os
-x=[1,2,3]
